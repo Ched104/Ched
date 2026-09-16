@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chedrick's Product Website</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f2f4f7;
+            color: #222;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #1e3a8a;
+            padding: 12px;
+            text-align: center;
+        }
+
+        nav button {
+            background: white;
+            color: #1e3a8a;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        nav button:hover {
+            background: #dbeafe;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #172554;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .product {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .product img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product h3 {
+            margin-top: 12px;
+        }
+
+        .price {
+            color: #16a34a;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .product button,
+        .admin-form button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .product button:hover,
+        .admin-form button:hover {
+            background: #1d4ed8;
+        }
+
+        .admin-form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+
+        .admin-form input,
+        .admin-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .admin-product {
+            background: white;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete {
+            background: #dc2626 !important;
+            margin-left: 5px;
+        }
+
+        footer {
+            margin-top: 40px;
+            background: #172554;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #message {
+            margin: 15px 0;
+            font-weight: bold;
+            color: #16a34a;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Chedrick's Product Website</h1>
+    <p>Dynamic Product Viewing System</p>
+</header>
+
+<nav>
+    <button onclick="showPage('home')">Products</button>
+    <button onclick="showPage('admin')">Developer / Admin</button>
+</nav>
+
+<div class="container">
+
+    <!-- PRODUCT PAGE -->
+    <section id="home" class="page active">
+        <h2>Available Products</h2>
+
+        <div id="productList" class="products"></div>
+    </section>
+
+
+    <!-- ADMIN PAGE -->
+    <section id="admin" class="page">
+
+        <h2>Developer / Admin Panel</h2>
+
+        <div class="admin-form">
+
+            <label>Product Name</label>
+            <input type="text" id="productName"
+                   placeholder="Enter product name">
+
+            <label>Price</label>
+            <input type="number" id="productPrice"
+                   placeholder="Enter price">
+
+            <label>Image URL</label>
+            <input type="text" id="productImage"
+                   placeholder="Enter image URL">
+
+            <label>Description</label>
+            <textarea id="productDescription"
+                      placeholder="Enter product description"></textarea>
+
+            <button onclick="addProduct()">
+                Add Product
+            </button>
+
+            <p id="message"></p>
+        </div>
+
+        <h2 style="margin-top:30px;">Manage Products</h2>
+
+        <div id="adminList"></div>
+
+    </section>
+
+</div>
+
+<footer>
+    <p>Created by Chedrick P. Recilla</p>
+</footer>
+
+
+<script>
+
+    // Starting products
+    let products = JSON.parse(localStorage.getItem("products")) || [
+
+        {
+            name: "Laptop",
+            price: 25000,
+            image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
+            description: "A useful laptop for school and work."
+        },
+
+        {
+            name: "Computer Mouse",
+            price: 500,
+            image: "https://images.unsplash.com/photo-1527814050087-3793815479db",
+            description: "A simple and comfortable computer mouse."
+        },
+
+        {
+            name: "Keyboard",
+            price: 1200,
+            image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3",
+            description: "A keyboard suitable for everyday computer use."
+        }
+
+    ];
+
+
+    // Save products
+    function saveProducts() {
+        localStorage.setItem("products", JSON.stringify(products));
+    }
+
+
+    // Display products
+    function displayProducts() {
+
+        const list = document.getElementById("productList");
+
+        list.innerHTML = "";
+
+        products.forEach((product, index) => {
+
+            list.innerHTML += `
+
+                <div class="product">
+
+                    <img src="${product.image}"
+                         alt="${product.name}">
+
+                    <h3>${product.name}</h3>
+
+                    <p class="price">
+                        ₱${Number(product.price).toLocaleString()}
+                    </p>
+
+                    <p>${product.description}</p>
+
+                    <br>
+
+                    <button onclick="viewProduct(${index})">
+                        View Product
+                    </button>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+
+    // View product
+    function viewProduct(index) {
+
+        const product = products[index];
+
+        alert(
+            "PRODUCT DETAILS\n\n" +
+            "Name: " + product.name + "\n" +
+            "Price: ₱" + Number(product.price).toLocaleString() + "\n" +
+            "Description: " + product.description
+        );
+
+    }
+
+
+    // Add product
+    function addProduct() {
+
+        const name =
+            document.getElementById("productName").value;
+
+        const price =
+            document.getElementById("productPrice").value;
+
+        const image =
+            document.getElementById("productImage").value;
+
+        const description =
+            document.getElementById("productDescription").value;
+
+
+        if (name === "" ||
+            price === "" ||
+            image === "" ||
+            description === "") {
+
+            alert("Please complete all fields.");
+
+            return;
+        }
+
+
+        const newProduct = {
+
+            name: name,
+
+            price: Number(price),
+
+            image: image,
+
+            description: description
+
+        };
+
+
+        products.push(newProduct);
+
+        saveProducts();
+
+        displayProducts();
+
+        displayAdminProducts();
+
+
+        document.getElementById("productName").value = "";
+        document.getElementById("productPrice").value = "";
+        document.getElementById("productImage").value = "";
+        document.getElementById("productDescription").value = "";
+
+
+        document.getElementById("message").innerText =
+            "Product added successfully!";
+
+    }
+
+
+    // Display admin products
+    function displayAdminProducts() {
+
+        const list =
+            document.getElementById("adminList");
+
+        list.innerHTML = "";
+
+
+        products.forEach((product, index) => {
+
+            list.innerHTML += `
+
+                <div class="admin-product">
+
+                    <div>
+                        <strong>${product.name}</strong>
+                        <br>
+                        ₱${Number(product.price).toLocaleString()}
+                    </div>
+
+                    <div>
+
+                        <button
+                            onclick="editProduct(${index})">
+                            Edit
+                        </button>
+
+                        <button
+                            class="delete"
+                            onclick="deleteProduct(${index})">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+
+    // Delete product
+    function deleteProduct(index) {
+
+        if (confirm("Delete this product?")) {
+
+            products.splice(index, 1);
+
+            saveProducts();
+
+            displayProducts();
+
+            displayAdminProducts();
+
+        }
+
+    }
+
+
+    // Edit product
+    function editProduct(index) {
+
+        const product = products[index];
+
+        const newName =
+            prompt("Product name:", product.name);
+
+        if (newName === null) return;
+
+
+        const newPrice =
+            prompt("Price:", product.price);
+
+        if (newPrice === null) return;
+
+
+        const newDescription =
+            prompt("Description:", product.description);
+
+        if (newDescription === null) return;
+
+
+        product.name = newName;
+
+        product.price = Number(newPrice);
+
+        product.description = newDescription;
+
+
+        saveProducts();
+
+        displayProducts();
+
+        displayAdminProducts();
+
+    }
+
+
+    // Change pages
+    function showPage(page) {
+
+        document.querySelectorAll(".page")
+            .forEach(section => {
+                section.classList.remove("active");
+            });
+
+
+        document.getElementById(page)
+            .classList.add("active");
+
+    }
+
+
+    // Load website
+    displayProducts();
+
+    displayAdminProducts();
+
+</script>
+
+</body>
+</html>
