@@ -1,1 +1,71 @@
-its simple 
+# CPR STUDENT GRADE MANAGEMENT SYSTEM
+# Simple Python Program for BSCS 1st Year
+
+print("===== CPR STUDENT GRADE MANAGEMENT SYSTEM =====")
+
+# Step 1: Ask for the number of students (must be at least 5)[span_0](start_span)[span_0](end_span)
+num_students = int(input("Enter number of students (at least 5): "))
+
+while num_students < 5:
+    print("Error: Please enter at least 5 students.")
+    num_students = int(input("Enter number of students (at least 5): "))
+
+# Step 2: Create empty lists to store information for each student
+names = []
+averages = []
+remarks = []
+
+# Step 3: Use a loop to get scores for each student[span_1](start_span)[span_1](end_span)
+for i in range(1, num_students + 1):
+    print(f"\n--- Enter details for Student {i} ---")
+    name = input("Enter student name: ")[span_2](start_span)[span_2](end_span)
+    quiz = float(input("Enter quiz score: "))[span_3](start_span)[span_3](end_span)
+    activity = float(input("Enter activity score: "))[span_4](start_span)[span_4](end_span)
+    exam = float(input("Enter exam score: "))[span_5](start_span)[span_5](end_span)
+
+    # Compute individual average (Formula: Quiz + Activity + Exam / 3)[span_6](start_span)[span_6](end_span)
+    average = (quiz + activity + exam) / 3
+
+    # Check if passed or failed (Passing grade is 75)[span_7](start_span)[span_7](end_span)
+    if average >= 75:
+        remark = "Passed"
+    else:
+        remark = "Failed"
+
+    # Save the answers into our lists
+    names.append(name)
+    averages.append(average)
+    remarks.append(remark)
+
+# Step 4: Display Individual Grade Report[span_8](start_span)[span_8](end_span)
+print("\n===== INDIVIDUAL GRADE REPORT =====")
+for i in range(num_students):
+    print(f"{names[i]} - Average: {averages[i]:.2f} - Remarks: {remarks[i]}")[span_9](start_span)[span_9](end_span)
+
+# Step 5: Compute Class Summary Statistics[span_10](start_span)[span_10](end_span)
+highest_avg = max(averages)[span_11](start_span)[span_11](end_span)
+lowest_avg = min(averages)[span_12](start_span)[span_12](end_span)
+class_average = sum(averages) / num_students[span_13](start_span)[span_13](end_span)
+passed_count = remarks.count("Passed")[span_14](start_span)[span_14](end_span)
+failed_count = remarks.count("Failed")[span_15](start_span)[span_15](end_span)
+
+# Step 6: Determine Class Performance Message[span_16](start_span)[span_16](end_span)
+if class_average >= 90:
+    class_performance = "Excellent Class Performance[span_17](start_span)"[span_17](end_span)
+elif class_average >= 80:
+    class_performance = "Good Class Performance[span_18](start_span)"[span_18](end_span)
+elif class_average >= 75:
+    class_performance = "Satisfactory Class Performance[span_19](start_span)"[span_19](end_span)
+else:
+    class_performance = "Needs Improvement[span_20](start_span)"[span_20](end_span)
+
+# Step 7: Display Class Summary Report[span_21](start_span)[span_21](end_span)
+print("\n===== CLASS SUMMARY REPORT =====")[span_22](start_span)[span_22](end_span)
+print(f"Highest Average: {highest_avg:.2f}")[span_23](start_span)[span_23](end_span)
+print(f"Lowest Average: {lowest_avg:.2f}")[span_24](start_span)[span_24](end_span)
+print(f"Class Average: {class_average:.2f}")[span_25](start_span)[span_25](end_span)
+print(f"Passed Students: {passed_count}")[span_26](start_span)[span_26](end_span)
+print(f"Failed Students: {failed_count}")[span_27](start_span)[span_27](end_span)
+print(f"Class Performance: {class_performance}")[span_28](start_span)[span_28](end_span)
+print("Thank you for using the system.")[span_29](start_span)[span_29](end_span)
+
